@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>لیست کاربران | پایگاه داده Flask</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <style>
+        body {
+            direction: rtl;
+            text-align: right;
+            background-color: #f0f2f5; /* رنگ پس زمینه ملایم */
+        }
+        .container {
+            margin-top: 40px;
+        }
+        .table-responsive {
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden; /* برای گرد کردن گوشه‌های جدول */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+            <h1 class="text-primary">📋 لیست کاربران ثبت نام شده</h1>
+            <a href="{{ url_for('register') }}" class="btn btn-outline-primary">
+                ➕ ثبت نام کاربر جدید
+            </a>
+        </header>
+
+        {% if users %}
+
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID (کلید اصلی)</th>
+                            <th>نام کاربری</th>
+                            <th>ایمیل</th>
+                            <th>🔐 پسورد هش شده (امن!)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td class="fw-bold text-success">{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td><code class="text-break small">{{ user.password_hash }}</code></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+                <h4 class="alert-heading">🚫 دیتابیس خالی است!</h4>
+                <p>هنوز هیچ کاربری در پایگاه داده ثبت نام نکرده است.</p>
+                <hr>
+                <a href="{{ url_for('register') }}" class="btn btn-warning">شروع ثبت نام</a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
