@@ -4,60 +4,202 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ثبت نام کاربر | سامانه Flask</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
         body {
-            direction: rtl;
-            text-align: right;
-            background-color: #f8f9fa; /* رنگ پس زمینه روشن */
+             font-family: 'Vazirmatn', sans-serif;
+             min-height: 100vh;
+             background: linear-gradient(135deg, #0f5132, #198754);
+             overflow-y: auto;
+             overflow-x: hidden;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             position: relative;
+             padding: 40px 15px;
         }
-        .container {
-            max-width: 500px; /* حداکثر عرض فرم برای زیبایی */
-            margin-top: 50px;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        /* Background shapes */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .shape-1 {
+            width: 340px;
+            height: 340px;
+            background: #20c997;
+            top: -90px;
+            right: -90px;
+        }
+
+        .shape-2 {
+            width: 280px;
+            height: 280px;
+            background: #6f42c1;
+            bottom: -70px;
+            left: -70px;
+        }
+
+        .shape-3 {
+            width: 220px;
+            height: 220px;
+            background: #0dcaf0;
+            top: 45%;
+            left: 60%;
+        }
+
+        /* Register Card */
+        .register-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 520px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 18px;
+            padding: 35px 32px;
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.25);
+            animation: fadeUp 0.6s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-title {
+            font-weight: 800;
+            color: #0f5132;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 12px;
+            padding: 10px 14px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+            border-color: #198754;
+        }
+
+        .btn-register {
+            border-radius: 12px;
+            padding: 11px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #198754, #20c997);
+            border: none;
+        }
+
+        .btn-register:hover {
+            opacity: 0.9;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            font-weight: 500;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1 class="text-center mb-4 text-primary">👤 ثبت نام کاربر جدید</h1>
-        <p class="text-center text-muted">این فرم، پسورد را به صورت **هش شده** ذخیره می‌کند.</p>
-        
+
+    <!-- Background shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <div class="register-card">
+
+        <h2 class="text-center mb-4 register-title">👤 ثبت نام کاربر جدید</h2>
+
+        {# پیام‌های فلش #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <form method="POST" action="{{ url_for('register') }}">
-            
-            <div class="mb-3">
-                <label for="username" class="form-label">نام کاربری:</label>
-                <input type="text" class="form-control" id="username" name="username" required aria-describedby="usernameHelp">
-                <div id="usernameHelp" class="form-text">نام کاربری باید یکتا باشد.</div>
+
+            <!-- Name Row -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstname" class="form-label">🧑 نام</label>
+                    <input type="text" class="form-control" id="firstname" name="firstname" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastname" class="form-label">👤 نام خانوادگی</label>
+                    <input type="text" class="form-control" id="lastname" name="lastname" required>
+                </div>
             </div>
-            
+
             <div class="mb-3">
-                <label for="email" class="form-label">ایمیل:</label>
+                <label for="email" class="form-label">📧 ایمیل</label>
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
-            
+
+            <div class="mb-3">
+                <label for="address" class="form-label">📍 آدرس</label>
+                <textarea class="form-control" id="address" name="address" rows="2"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="zipcode" class="form-label">🏙️ شهر</label>
+                <select class="form-select" id="zipcode" name="zipcode" required>
+                    <option value="" selected disabled>شهر خود را انتخاب کنید...</option>
+                    {% for city in cities %}
+                        <option value="{{ city.Zipcode }}">
+                            {{ city.City }} ({{ city.Zipcode }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
             <div class="mb-4">
-                <label for="password" class="form-label">رمز عبور:</label>
+                <label for="password" class="form-label">🔑 رمز عبور</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            
-            <button type="submit" class="btn btn-success w-100">✅ ثبت نام</button>
-            
+
+            <button type="submit" class="btn btn-success w-100 btn-register">
+                ثبت نام در سامانه
+            </button>
+
         </form>
-        
+
         <hr class="my-4">
-        
-        <div class="text-center">
-             <a href="{{ url_for('users_list') }}" class="btn btn-outline-secondary btn-sm">مشاهده لیست کاربران ثبت نام شده</a>
+
+        <div class="text-center footer-links">
+            <a href="{{ url_for('users_list') }}" class="text-secondary">
+                مشاهده لیست کاربران ثبت‌نام‌شده
+            </a>
         </div>
-        
+
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
