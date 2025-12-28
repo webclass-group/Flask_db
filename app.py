@@ -25,7 +25,11 @@ login_manager.init_app(app)
 login_manager.login_view = 'login' # تعیین نام تابع View برای صفحه ورود
 login_manager.login_message = "لطفاً برای دسترسی به این صفحه وارد شوید." # پیام پیش‌فرض
 
-# -----------------------------------
+
+# -------------------- Google OAuth --------------------
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
 
 # --- ۲. تعریف مدل‌های داده (UserMixin اضافه شد) ---
 
